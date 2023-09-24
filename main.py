@@ -25,5 +25,4 @@ ua = df_adressen.iloc[:,2] #Maximale aantal eters op adres
 #c = df_adressen.loc[[A],["Huisadres","Min groepsgrootte","Max groepsgrootte","Voorkeur gang"]]
 
 #print(c)
-
-
+print(df_adressen)
