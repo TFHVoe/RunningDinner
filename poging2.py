@@ -18,7 +18,6 @@ a = df.iloc[:,6].isin(elementen_gang) #Wanneer iemand kookt is het element een v
 
 """Gastheer en/of gastvrouw moeten gedurende de gang die zij bereiden aanwezig zijn op hun eigen huisadres."""
 count1 = 0
-count2 = 0
 for j in elementen_gang:                                        
     for i in range(len(df)):
         if df.iloc[i,6] == j and df.iloc[i,2] == df.loc[i, j]: #Controleert dat wanneer iemand een gang kookt hij ook thuis is.  
