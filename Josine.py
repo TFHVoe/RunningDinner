@@ -25,11 +25,7 @@ for i in lst_2023:
 
 
 
-
-
-
-#lijst met alle duo's die elkaar tegenkomen
-koppels2023 = []
+koppels2023 = [] #lijst met alle duo's die elkaar tegenkomen.
 for i in lst_2023_2:
     koppel = i[0]+i[1]
     koppels2023.append(koppel)
@@ -41,7 +37,7 @@ for k in koppels2023:
 print(count_dezelfdetafelgenoot2ofmeer)
 
 
-
+#print(koppels2023[1])
 #Data inladen 
 df = pd.read_excel('Running Dinner eerste oplossing 2022.xlsx')
 df_adressen = pd.read_excel("Running Dinner dataset 2022.xlsx",sheet_name="Adressen" )
