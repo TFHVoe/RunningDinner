@@ -4,7 +4,7 @@ import pandas as pd
 #Functies eisen: 
 
 #Functies wensen:
-def hoofdgerecht2022(gt, df_kookte_2021): #Functie die telt hoe vaak een huis houden het vorige jaar en dit jaar moet koken.
+def hoofdgerecht2022(gt, df_kookte_2021): #Functie die telt hoe vaak een huis houden het hoofdgerecht vorige jaar en dit jaar moet koken.
     """Functie die telt hoe vaak een huishouden dat in 2022 een hoofdgerecht bereid heeft, ook een hoofdgerecht bereidt tijdens de komende Running Dinner."""
     count_hoofdgerecht2022 = 0 #Count van aantal.
     hh = {} #Huisadress kookte hoofdgerecht vorig jaar.
@@ -109,7 +109,7 @@ gangen = ['Voor','Hoofd','Na']
 for j in gangen:
     for i in range(len(df)):
         ts[(df.iloc[i, 1], j)] = df.loc[i, j]
-#print(ts)
+#print(s)
 
 #Gebruik functies
 count_hoofdgerecht2022 = hoofdgerecht2022(gt, df_kookte_2021)
