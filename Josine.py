@@ -1,6 +1,7 @@
 import pandas as pd
 #twee verschillende deelnemers zo weining mogelijk met elkaar aan tafel
 df = pd.read_excel('Running Dinner eerste oplossing 2022.xlsx')
+df_adressen = pd.read_excel("Running Dinner dataset 2022.xlsx",sheet_name="Adressen" )
 
 def meerdermalentafelgenoot(df):
     """Functie die telt hoe vaak deelnemers in 2023 meerdere malen elkaars tafelgenoten zijn."""
@@ -39,3 +40,32 @@ def meerdermalentafelgenoot(df):
         if i >= 2:
             count_dezelfdetafelgenoot2ofmeer += 1 #Het tellen hoe vaak er een twee personen meer dan twee keer bij elkaar aan aantal aan tafel zitten.
     return count_dezelfdetafelgenoot2ofmeer
+
+
+#Het aantal tafelgenoten dat op een bepaald huisadres eet, voldoet aan de bij het adres horende minimum en maximum groepsgrootte.
+#dict huisadres: aantal gasten ingeplnad, die dmv een for loop kijkt of tussen min of max aantal gasten zit anders stop loop
+huisadres_ingedeelde_aantaleters = {}
+for i in range(len(df)):
+    huisadres_ingedeelde_aantaleters[df.iloc[i,2]] = df.iloc[i,7]
+print(huisadres_ingedeelde_aantaleters)
+df_ingeplande_eters = pd.DataFrame({"Huisadres": huisadres_ingedeelde_aantaleters.keys(), "Aantal ingedeelde eters": huisadres_ingedeelde_aantaleters.values()})
+print(df_ingeplande_eters)
+print(df.iloc[0,0])
+
+
+for i in range(len(df)):
+    for j in range(len(df_ingeplande_eters)):
+        if df_ingeplande_eters.iloc[i,0] == df.iloc[i,2]:
+            print("alle huisadressen komen overeen")
+            if df.iloc[i,1] <= df_ingeplande_eters.iloc[i,1] or df_ingeplande_eters.iloc[i,1] <= df.iloc[i,2]:
+                print("Het aantal eters bij elk adres is toegelaten.") 
+
+    
+    
+  
+    
+    
+    
+    
+    
+# Een heel klein aantal groepjes van deelnemers, vaak één of twee duo’s, zit tijdens het gehele Running Dinner voor elke gang bij elkaar aan tafel
