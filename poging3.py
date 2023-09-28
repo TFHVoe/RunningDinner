@@ -182,7 +182,7 @@ def zelfdetafelpartners2021(df, df_tafelgenoot_2021):#Functie die telt hoevaak t
                 countzelfdetafelpartner2021 += 1
     return countzelfdetafelpartner2021
 
-def wensen(df, gt, df_kookte_2021, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021):
+def wensen(df, gt, df_kookte_2021, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021):#Een functie de alle wensen uitvoert
     count_meer_dan_twee_keer_zelfde_persoon = meerdermalentafelgenoot(df)
     count_hoofdgerecht2022 = hoofdgerecht2022(gt, df_kookte_2021)
     count_voorkeur = voorkeursgang(df, df_adressen)
