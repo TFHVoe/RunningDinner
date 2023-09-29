@@ -1,36 +1,23 @@
 import pandas as pd
 
 df = pd.read_excel('Running Dinner eerste oplossing 2022.xlsx')
+df_bewoners = pd.read_excel("Running Dinner dataset 2022.xlsx",sheet_name="Bewoners" )
 
-ts = {} #Tafelschikking D X G --> A
-gangen = ['Voor','Hoofd','Na']
-for j in gangen:
-    for i in range(len(df)):
-        ts[(df.iloc[i, 1], j)] = df.loc[i, j]
-#print(ts)
-def elkegangandradres(ts):
-    """Functie die telt hoe vaak niet door ieder persoon 3 gangen op verschillende adressen gegeten wordt."""
-    lst_unique = []
-    for i, j in ts.items():
-        for k in i[0:2:len(i)]: #For loop die een lijst vult met alle unique deelnemers.
-            if k not in lst_unique:
-                lst_unique.append(k)
+gt = {} #Gangtoewijzing A --> G
+for i in range(len(df)):
+    gt[df.iloc[i,2]] = df.iloc[i,6]
 
-    lst_amount = []
+
+def moetkoken(df, df_bewoners):#Functie die telt hoe vaak er een persoon niet kookt die wel moet koken of andersom.
+    """Functie die telt hoeveel mensen die een van de gangen moet koken niet kookt."""
+    count_bewoners_die_moeten_koeken_maar_niet_koken = 0
     gangen = ['Voor','Hoofd','Na']
-    for i in lst_unique:
-        countabc = 0
-        lst_adres = []
-        for j, k in ts.items(): #Een complex van for loops die controlleert dat iedere deelnemer een voor, hoofd en na gerecht eet en dat geen gang op hetzelfde adres gegeten wordt. 
-            for l in gangen:
-                if i == j[0] and j[1] == l and k not in lst_adres:
-                    countabc += 1
-                    lst_adres.append(k)
-        lst_amount.append(countabc)
+    for i in range(len(df)):
+        for j in range(len(df_bewoners)):
+            if df_bewoners.iloc[j,2] != 1 and df.iloc[i,1] == df_bewoners.iloc[j, 0] and df.iloc[i,6] not in gangen: #For loop die controlleert of er geen bewoner is die moet koken die niet een van de gangen kookt. 
+                count_bewoners_die_moeten_koeken_maar_niet_koken += 1 
+    
+    return count_bewoners_die_moeten_koeken_maar_niet_koken               
 
-    fout_count = 0
-    for i in lst_amount:
-        if i != 3:      #Een for loop die telt hoe vaak er niet voldaan wordt aan de eisen dat er een voor, hoofd en nagerecht gegeten wordt en dat dit op een ander adres is.    
-            fout_count += 1
-    return fout_count
+
 
