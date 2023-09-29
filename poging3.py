@@ -2,7 +2,7 @@
 import pandas as pd
 
 #Functies eisen: 
-def elkeganganderadres(ts):#Funcite die telt hoe vaak er niet door een persoon een voor, hoofd en nagerecht gegeten wordt en dat dit op een ander adres is.
+def elkeganganderadres(ts):#Functie die telt hoe vaak er niet door een persoon een voor, hoofd en nagerecht gegeten wordt en dat dit op een ander adres is.
     """Functie die telt hoe vaak niet door ieder persoon 3 gangen op verschillende adressen gegeten wordt."""
     lst_unique = []
     for i, j in ts.items():
@@ -37,9 +37,19 @@ def moetkoken(df, df_bewoners):#Functie die telt hoe vaak er een persoon niet ko
                 count_bewoners_die_moeten_koeken_maar_niet_koken += 1 
     
     return count_bewoners_die_moeten_koeken_maar_niet_koken         
+def kookadresishuisadres(df):#Functie die telt hoe vaak het kook adres niet gelijk is aan het thuisaders
+
+    """Functie die telt hoe vaak het kook adres niet gelijk is aan het huisadres."""
+    count_kook_adres_is_niet_huisadres = 0
+    gangen = ['Voor','Hoofd','Na']
+    for i in range(len(df)):
+        if df.iloc[i,6] in gangen:
+            if df.iloc[i, 1] == df.loc[df.iloc[i,0],df.iloc[i,6]]: #Loop die controleert of het huisadres gelijk is aan het kookadres. 
+                count_kook_adres_is_niet_huisadres += 1
+    return count_kook_adres_is_niet_huisadres
 
 #Functies wensen:
-def meerdermalentafelgenoot(df):#Functi die telt hoe vaak er twee personen meer dat twee keer aan de zelfde tafel zitten.
+def meerdermalentafelgenoot(df):#Functie die telt hoe vaak er twee personen meer dat twee keer aan de zelfde tafel zitten.
     """Functie die telt hoe vaak deelnemers in 2023 meerdere malen elkaars tafelgenoten zijn."""
 
     lst_2023 = []
