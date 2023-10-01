@@ -85,5 +85,5 @@ setl.reset_index(drop = True, inplace = True)
 if setl["Voor"][0] == set1a["Voor"][0] and setl["Hoofd"][0] == set1a["Hoofd"][0] and setl["Na"][0] ==set1a["Na"][0]:
     print("jaaaaaaaaaaaa")
     
-    
+print(setl)    
 
