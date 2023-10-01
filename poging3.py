@@ -47,6 +47,19 @@ def kookadresishuisadres(df):#Functie die telt hoe vaak het kook adres niet geli
             if df.iloc[i, 1] == df.loc[df.iloc[i,0],df.iloc[i,6]]: #Loop die controleert of het huisadres gelijk is aan het kookadres. 
                 count_kook_adres_is_niet_huisadres += 1
     return count_kook_adres_is_niet_huisadres
+def count_aantal_eters_voldoed(df, df_adressen):
+    """Functie die telt hoevaak een bewoner voor een gaste aantal moet koken dat buiten het minimun of maximum valt van gasten waarvoor ze kunnen koken."""
+    
+    count_aantal_eters_voldoed = 0
+    unique = []
+    for i in range(len(df)):
+        if df.iloc[i,2] not in unique:      
+            unique.append(df.iloc[i,2])
+            for j in range(len(df_adressen)):
+                if df.iloc[i,2] == df_adressen.iloc[j,0] and (df_adressen.iloc[j,1] == np.nan and df_adressen[j,2] == np.nan): #Functie die controleert of de addressen gelijk zijn en dat de mensen die niet hoeven te koken niet meegenomen worden in de som.
+                    if (df_adressen.iloc[j, 1] <= df.iloc[i,7] <= df_adressen.iloc[j,2]) == False:
+                        count_aantal_eters_voldoed += 1        
+    return count_aantal_eters_voldoed
 
 #Functies wensen:
 def meerdermalentafelgenoot(df):#Functie die telt hoe vaak er twee personen meer dat twee keer aan de zelfde tafel zitten.
