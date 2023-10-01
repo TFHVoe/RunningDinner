@@ -87,7 +87,9 @@ for i in range(1,3):
     if a["Voor"][0] == b["Voor"][0] and a["Hoofd"][0] == b["Hoofd"][0] and b["Na"][0] == a["Na"][0]:
         print("Alle adressen voor de gangen komen overeen")
     else:
-        print("De adressen voor de koppels die niet samenblijven komen niet overeen")
-    
-print(setl)    
+        print("De adressen voor de koppels die niet samenblijven komen niet overeen")  
+        
 
+        
+           
+#deze eis werkt nu en is zo te gebruiken voor de data van 2023.
