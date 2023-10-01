@@ -51,23 +51,25 @@ df_ingeplande_eters = pd.DataFrame({"Huisadres": huisadres_ingedeelde_aantaleter
 df_ingeplande_eters = df_ingeplande_eters.fillna(0)
 print(df_ingeplande_eters)
                 
-                
+niets = 0                
 count = []
 for i in range(len(df_adressen)):
     for j in range(len(df_ingeplande_eters)):
         if df_ingeplande_eters.iloc[j,0] == df_adressen.iloc[i,0]:
             if df_adressen.iloc[i,1] <=  df_ingeplande_eters.iloc[j,1] <= df_adressen.iloc[i,2]:
-                print("aantal eters is toegestaan")
-                print(df_adressen.iloc[j,0])
+                niets += 1
             else:
                 print("aantal niet toegestaan")
                 print(df_ingeplande_eters.iloc[i,0])
-                count.append(df_ingeplande_eters.iloc[i,0])
+                count.append(df_adressen.iloc[i,0])
 print(count)
  #niet toegestaan huishoudens als je adressen print ipv df_ingeplande_eters: WO6,WO1,VW36,VW56,WO40,WO41,W)79
  #dit is de toegelaten oplossen dus alle huishoudens zouden overeen moeten komen, heb zogenaamde foutieve adressen gecontroleerd en ze zijn toegelaten               
 
-    
+unique = []
+for i in range(len(df)):
+    if i not in unique:
+        unique.append(i)    
     
   
     
