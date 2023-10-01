@@ -89,5 +89,5 @@ for i in range(1,3):
     else:
         print("De adressen voor de koppels die niet samenblijven komen niet overeen")
     
-    
+print(setl)    
 
