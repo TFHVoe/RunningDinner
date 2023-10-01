@@ -78,12 +78,16 @@ for i in range(len(df)):
     
     
 # Een heel klein aantal groepjes van deelnemers, vaak één of twee duo’s, zit tijdens het gehele Running Dinner voor elke gang bij elkaar aan tafel
-setl = df.loc[df['Bewoner'] == "WO_59_V_Els"] 
-set1a = df.loc[df['Bewoner'] == "WO_59_M_Dré"]
-set1a.reset_index(drop = True, inplace = True)
-setl.reset_index(drop = True, inplace = True) 
-if setl["Voor"][0] == set1a["Voor"][0] and setl["Hoofd"][0] == set1a["Hoofd"][0] and setl["Na"][0] ==set1a["Na"][0]:
-    print("jaaaaaaaaaaaa")
+df_paarbijelkaar = pd.read_excel("Running Dinner dataset 2022.xlsx",sheet_name="Paar blijft bij elkaar" )
+for i in range(1,3):
+    a = df.loc[df["Bewoner"]== df_paarbijelkaar.iloc[i,0]]
+    b = df.loc[df["Bewoner"]== df_paarbijelkaar.iloc[i,1]]
+    a.reset_index(drop = True, inplace = True)
+    b.reset_index(drop = True, inplace = True) 
+    if a["Voor"][0] == b["Voor"][0] and a["Hoofd"][0] == b["Hoofd"][0] and b["Na"][0] == a["Na"][0]:
+        print("Alle adressen voor de gangen komen overeen")
+    else:
+        print("De adressen voor de koppels die niet samenblijven komen niet overeen")
     
     
 
