@@ -38,7 +38,7 @@ def moetkoken(df, df_bewoners):#Functie die telt hoe vaak er een persoon niet ko
                 count_bewoners_die_moeten_koeken_maar_niet_koken += 1 
     
     return count_bewoners_die_moeten_koeken_maar_niet_koken         
-def kookadresishuisadres(df):#Functie die telt hoe vaak het kook adres niet gelijk is aan het thuisaders
+def kookadresishuisadres(df):#Functie die telt hoe vaak het kook adres niet gelijk is aan het thuisaders.
 
     """Functie die telt hoe vaak het kook adres niet gelijk is aan het huisadres."""
     count_kook_adres_is_niet_huisadres = 0
@@ -48,7 +48,7 @@ def kookadresishuisadres(df):#Functie die telt hoe vaak het kook adres niet geli
             if df.iloc[i, 1] == df.loc[df.iloc[i,0],df.iloc[i,6]]: #Loop die controleert of het huisadres gelijk is aan het kookadres. 
                 count_kook_adres_is_niet_huisadres += 1
     return count_kook_adres_is_niet_huisadres
-def count_aantal_eters_voldoed(df, df_adressen):
+def countaantaletersvoldoed(df, df_adressen):#Functie die telt hoe vaak het gasten aantal waarvoor ze moeten koken buit het gasten aantal waarvoor ze kunnen koken ligt.
     """Functie die telt hoevaak een bewoner voor een gaste aantal moet koken dat buiten het minimun of maximum valt van gasten waarvoor ze kunnen koken."""
     
     count_aantal_eters_voldoed = 0
@@ -61,6 +61,27 @@ def count_aantal_eters_voldoed(df, df_adressen):
                     if (df_adressen.iloc[j, 1] <= df.iloc[i,7] <= df_adressen.iloc[j,2]) == False:
                         count_aantal_eters_voldoed += 1        
     return count_aantal_eters_voldoed
+def paarbijelkaar(df, df_paar_blijft_bij_elkaar):#Functie die telt hoe vaak een paar dat bij elkaar moet blijven niet bij elkaar is.
+    """Functie die telt hoe vaak een paar die bij elkaar moet zitten niet bij elkaar zit."""
+
+    count_paarnietbijelkaar = 0
+    for i in range(1,len(df_paar_blijft_bij_elkaar)):
+        a = df.loc[df["Bewoner"]== df_paar_blijft_bij_elkaar.iloc[i,0]]
+        b = df.loc[df["Bewoner"]== df_paar_blijft_bij_elkaar.iloc[i,1]]
+        a.reset_index(drop = True, inplace = True)
+        b.reset_index(drop = True, inplace = True) 
+        if (a["Voor"][0] == b["Voor"][0] and a["Hoofd"][0] == b["Hoofd"][0] and b["Na"][0] == a["Na"][0]) == 0:
+            count_paarnietbijelkaar += 1   
+    return count_paarnietbijelkaar
+
+def eisen(ts, df, df_bewoners, df_adressen, df_paar_blijft_bij_elkaar):
+    count_elke_gang_anders = elkeganganderadres(ts)
+    moet_koken = moetkoken(df, df_bewoners)
+    kookadres_is_huisadres = kookadresishuisadres(df)
+    count_aantal_eters_voldoed = countaantaletersvoldoed(df, df_adressen)
+    paar_bij_elkaar = paarbijelkaar(df, df_paar_blijft_bij_elkaar)
+
+    return f'count_elke_gang_anders: {count_elke_gang_anders}, moet_koken: {moet_koken}, kookadres_is_huisadres: {kookadres_is_huisadres}, count_aantal_eters_voldoed: {count_aantal_eters_voldoed}, paar_bij_elkaar: {paar_bij_elkaar}'
 
 #Functies wensen:
 def meerdermalentafelgenoot(df):#Functie die telt hoe vaak er twee personen meer dat twee keer aan de zelfde tafel zitten.
@@ -217,7 +238,7 @@ def zelfdetafelpartners2021(df, df_tafelgenoot_2021):#Functie die telt hoevaak t
                 countzelfdetafelpartner2021 += 1
     return countzelfdetafelpartner2021
 
-def wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021):#Een functie de alle wensen uitvoert
+def wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021):#Een functie de alle wensen uitvoert.
     count_meer_dan_twee_keer_zelfde_persoon = meerdermalentafelgenoot(df)
     count_hoofdgerecht2022 = hoofdgerecht2022(gt, df_kookte_2022)
     count_voorkeur = voorkeursgang(df, df_adressen)
@@ -229,6 +250,7 @@ def wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, d
 
 #Data inladen 
 df = pd.read_excel('Running Dinner eerste oplossing 2023 v2.xlsx')
+df_bewoners = pd.read_excel("Running Dinner dataset 2023 v2.xlsx",sheet_name="Bewoners" )
 df_adressen = pd.read_excel("Running Dinner dataset 2023 v2.xlsx",sheet_name="Adressen" )
 df_kookte_2022 = pd.read_excel("Running Dinner dataset 2023 v2.xlsx",sheet_name="Kookte vorig jaar")
 df_tafelgenoot_2022 = pd.read_excel("Running Dinner dataset 2023 v2.xlsx",sheet_name="Tafelgenoot vorig jaar")
@@ -253,3 +275,5 @@ for j in gangen:
 
 wensen  = wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021)
 print(wensen)
+eisen = eisen(ts, df, df_bewoners, df_adressen, df_paar_blijft_bij_elkaar)
+print(eisen)
