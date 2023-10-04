@@ -277,52 +277,37 @@ for j in gangen:
         ts[(df.iloc[i, 1], j)] = df.loc[i, j]
 
 #Gebruik functies
-
-
-#start = wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021)
-#itteratie = 0
-#for i in range(len(df)):
-#    for j in range(len(df)):
-#        if i == j:
-#            continue
-#        else:
-#            change1 = df.iloc[i,3]
-#            change2 = df.iloc[j,3]
-#
-#            df.iloc[j,3] = change1
-#            df.iloc[i,3] = change2
-#            if eisen(ts, df, df_bewoners, df_adressen, df_paar_blijft_bij_elkaar) > 0:
-#                continue
-#            else:
-#               sol = wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021)
-#               itteratie += 1
-#               logger.debug(msg=f'Itteratie:{itteratie}')
-#               logger.debug(msg=f'Wensen:{sol}')
-
+gebr_oplossing = []
 itteratie = 0  
 improved = True
 while improved:
     impoved = False
-    for i in range(3):
-        for j in range(3):
+    for i in range(len(df)):
+        for j in range(len(df)):
             if i == j:
                 continue
             else:
                 df_new = df.copy()
+                changes = []
                 change1 = df.iloc[i,3]
                 change2 = df.iloc[j,3]      #De twee cellen die verwisselt worden
 
                 df_new.iloc[j,3] = change1
                 df_new.iloc[i,3] = change2
-                if eisen(ts, df_new, df_bewoners, df_adressen, df_paar_blijft_bij_elkaar) > 0: #De controlle dat er geen eisen overschreden worden
-                    continue
-                else:
-                    sol = wensen(df_new, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021) 
-                    start = wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021)
-                    itteratie += 1
-                    logger.debug(msg=f'Itteratie:{itteratie}') 
-                    print(change1, change2)                    
-                    if sol < start: #Wanneer de oplossing kleiner is dan de start wordt de oplossing de nieuwe start.
-                        df = df_new
-                        improved = True
-                        logger.debug(msg=f'Wensen:{sol}')
+                changes.append(change1)
+                changes.append(change2)
+                tup = tuple(changes)
+                
+                if tup  not in gebr_oplossing:
+                    gebr_oplossing.append(tup)
+                    if eisen(ts, df_new, df_bewoners, df_adressen, df_paar_blijft_bij_elkaar) > 0: #De controlle dat er geen eisen overschreden worden
+                        continue
+                    else:
+                        sol = wensen(df_new, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021) 
+                        start = wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021)
+                        itteratie += 1
+                        logger.debug(msg=f'Itteratie:{itteratie}')                   
+                        if sol < start: #Wanneer de oplossing kleiner is dan de start wordt de oplossing de nieuwe start.
+                            df = df_new
+                            improved = True
+                            logger.debug(msg=f'Wensen:{sol}')
