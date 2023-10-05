@@ -277,7 +277,8 @@ for j in gangen:
         ts[(df.iloc[i, 1], j)] = df.loc[i, j]
 
 #Gebruik functies
-gebr_oplossing = []
+logger.debug(msg=f'Start:{wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021)}')
+verwisselde_personen = []
 itteratie = 0  
 improved = True
 while improved:
@@ -290,16 +291,20 @@ while improved:
                 df_new = df.copy()
                 changes = []
                 change1 = df.iloc[i,3]
-                change2 = df.iloc[j,3]      #De twee cellen die verwisselt worden
-
+                change2 = df.iloc[j,3]      #De verwisseling van de twee cellen
                 df_new.iloc[j,3] = change1
                 df_new.iloc[i,3] = change2
-                changes.append(change1)
-                changes.append(change2)
-                tup = tuple(changes)
+
+                koppel = []
+                persoon1 = df.iloc[i,1]
+                persoon2 = df.iloc[j, 1]   #Het maken van een tuple met het verwisselde koppel en de gang.
+                koppel.append(persoon1)
+                koppel.append(persoon2)
+                koppel.append('Voor')
                 
-                if tup  not in gebr_oplossing:
-                    gebr_oplossing.append(tup)
+                tup = tuple(sorted(koppel))
+                if tup not in verwisselde_personen:  #Het zorgen dat er alleen gekeken wordt naar unique oplossing door de verwisselde bewoners en de gang in een lijste te stoppen.
+                    verwisselde_personen.append(tup)
                     if eisen(ts, df_new, df_bewoners, df_adressen, df_paar_blijft_bij_elkaar) > 0: #De controlle dat er geen eisen overschreden worden
                         continue
                     else:
@@ -310,4 +315,4 @@ while improved:
                         if sol < start: #Wanneer de oplossing kleiner is dan de start wordt de oplossing de nieuwe start.
                             df = df_new
                             improved = True
-                            logger.debug(msg=f'Wensen:{sol}')
+                            logger.debug(msg=f'Oplossing:{sol}')
