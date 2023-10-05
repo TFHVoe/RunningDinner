@@ -150,7 +150,7 @@ def voorkeursgang(df, df_adressen):#Functie die telt hoevaak een voorkeur gang j
     for j, k in vg.items():
         for l, m in gt.items():
             if j == l and k == m: #Twee for loops die kijken voor ieder huisaderes of hier de voorkeur gang gekookt wordt.
-                count_voorkeur += 1
+                count_voorkeur -= 1
     return count_voorkeur
 def zelfdetafelpartners2022(df, df_tafelgenoot_2022):#Functie die telt hoevaak twee tafelgenoten in 2022 ook de tafelgenoot van 2023 waren.
     """Functie die telt hoe vaak twee deelnemers die in 2022 bij elkaar aan tafel zaten, in 2023 weer elkaars tafelgenoot waren."""
