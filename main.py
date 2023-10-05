@@ -281,38 +281,41 @@ logger.debug(msg=f'Start:{wensen(df, gt, df_kookte_2022, df_adressen, df_tafelge
 verwisselde_personen = []
 itteratie = 0  
 improved = True
+gangen = ['','','Voor','Hoofd','Na']
+
 while improved:
     impoved = False
-    for i in range(len(df)):
-        for j in range(len(df)):
-            if i == j:
-                continue
-            else:
-                df_new = df.copy()
-                changes = []
-                change1 = df.iloc[i,3]
-                change2 = df.iloc[j,3]      #De verwisseling van de twee cellen
-                df_new.iloc[j,3] = change1
-                df_new.iloc[i,3] = change2
+    for k in range(2,5):
+        for i in range(3):
+            for j in range(3):
+               if i == j:
+                    continue
+               else:
+                    df_new = df.copy()
+                    changes = []
+                    change1 = df.iloc[i,k]
+                    change2 = df.iloc[j,k]      #De verwisseling van de twee cellen
+                    df_new.iloc[j,k] = change1
+                    df_new.iloc[i,k] = change2
 
-                koppel = []
-                persoon1 = df.iloc[i,1]
-                persoon2 = df.iloc[j, 1]   #Het maken van een tuple met het verwisselde koppel en de gang.
-                koppel.append(persoon1)
-                koppel.append(persoon2)
-                koppel.append('Voor')
-                
-                tup = tuple(sorted(koppel))
-                if tup not in verwisselde_personen:  #Het zorgen dat er alleen gekeken wordt naar unique oplossing door de verwisselde bewoners en de gang in een lijste te stoppen.
-                    verwisselde_personen.append(tup)
-                    if eisen(ts, df_new, df_bewoners, df_adressen, df_paar_blijft_bij_elkaar) > 0: #De controlle dat er geen eisen overschreden worden
-                        continue
-                    else:
-                        sol = wensen(df_new, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021) 
-                        start = wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021)
-                        itteratie += 1
-                        logger.debug(msg=f'Itteratie:{itteratie}')                   
-                        if sol < start: #Wanneer de oplossing kleiner is dan de start wordt de oplossing de nieuwe start.
-                            df = df_new
-                            improved = True
-                            logger.debug(msg=f'Oplossing:{sol}')
+                    koppel = []
+                    persoon1 = df.iloc[i,1]
+                    persoon2 = df.iloc[j,1]   #Het maken van een tuple met het verwisselde koppel en de gang.
+                    koppel.append(persoon1)
+                    koppel.append(persoon2)
+                    koppel.append(gangen[k])
+                    
+                    tup = tuple(sorted(koppel))
+                    if tup not in verwisselde_personen:  #Het zorgen dat er alleen gekeken wordt naar unique oplossing door de verwisselde bewoners en de gang in een lijste te stoppen.
+                        verwisselde_personen.append(tup)
+                        if eisen(ts, df_new, df_bewoners, df_adressen, df_paar_blijft_bij_elkaar) > 0: #De controlle dat er geen eisen overschreden worden
+                           continue
+                        else:
+                            sol = wensen(df_new, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021) 
+                            start = wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021)
+                            itteratie += 1
+                            logger.debug(msg=f'Itteratie:{itteratie}')                   
+                            if sol < start: #Wanneer de oplossing kleiner is dan de start wordt de oplossing de nieuwe start.
+                                df = df_new
+                                improved = True
+                                logger.debug(msg=f'Oplossing:{sol}')

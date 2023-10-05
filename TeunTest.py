@@ -31,6 +31,9 @@ for i in range(3):
             if tup not in verwisselde_personen:  #Het zorgen dat er alleen gekeken wordt naar unique oplossing door de verwisselde bewoners en de gang in een lijste te stoppen.
                 verwisselde_personen.append(tup)
 
+   
+
+
             
             
 
