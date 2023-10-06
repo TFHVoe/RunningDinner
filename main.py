@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import logging
 import sys
+import matplotlib.pyplot as plt
+
 logger = logging.getLogger(name='sa-logger')
 logging.basicConfig(level=logging.DEBUG,
 format='[%(asctime)s] %(message)s',
@@ -35,26 +37,26 @@ def elkeganganderadres(ts):#Functie die telt hoe vaak er niet door een persoon e
         if i != 3:      #Een for loop die telt hoe vaak er niet voldaan wordt aan de eisen dat er een voor, hoofd en nagerecht gegeten wordt en dat dit op een ander adres is.    
             fout_count += 1
     return fout_count
-def moetkoken(df, df_bewoners):#Functie die telt hoe vaak er een persoon niet kookt die wel moet koken.
+def moetkoken(df, df_bewoners):#Functie die telt hoe vaak er een persoon niet kookt die wel moet koken.    """Functie die telt hoe vaak het kook adres niet gelijk is aan het huisadres."""
     """Functie die telt hoeveel mensen die een van de gangen moet koken niet kookt."""
-    count_bewoners_die_moeten_koeken_maar_niet_koken = 0
+    count_kook_adres_is_niet_huisadres = 0
     gangen = ['Voor','Hoofd','Na']
     for i in range(len(df)):
-        for j in range(len(df_bewoners)):
-            if df_bewoners.iloc[j,2] != 1 and df.iloc[i,1] == df_bewoners.iloc[j, 0] and df.iloc[i,6] not in gangen: #For loop die controlleert of er geen bewoner is die moet koken die niet een van de gangen kookt. 
-                count_bewoners_die_moeten_koeken_maar_niet_koken += 1 
+        if df.iloc[i,6] in gangen:
+            if df.iloc[i,2] != df.loc[i,df.iloc[i,6]]:
+                count_kook_adres_is_niet_huisadres +=1 
+    return count_kook_adres_is_niet_huisadres
     
     return count_bewoners_die_moeten_koeken_maar_niet_koken         
 def kookadresishuisadres(df):#Functie die telt hoe vaak het kook adres niet gelijk is aan het thuisaders.
-
     """Functie die telt hoe vaak het kook adres niet gelijk is aan het huisadres."""
     count_kook_adres_is_niet_huisadres = 0
     gangen = ['Voor','Hoofd','Na']
     for i in range(len(df)):
         if df.iloc[i,6] in gangen:
-            if df.iloc[i, 1] == df.loc[df.iloc[i,0],df.iloc[i,6]]: #Loop die controleert of het huisadres gelijk is aan het kookadres. 
-                count_kook_adres_is_niet_huisadres += 1
-    return count_kook_adres_is_niet_huisadres
+            if df.iloc[i,2] != df.loc[i,df.iloc[i,6]]: #Controleert of het huisadres gelijk is aan het kookaders.
+                count_kook_adres_is_niet_huisadres +=1 
+    return count_kook_adres_is_niet_huisadres 
 def countaantaletersvoldoed(df, df_adressen):#Functie die telt hoe vaak het gasten aantal waarvoor ze moeten koken buit het gasten aantal waarvoor ze kunnen koken ligt.
     """Functie die telt hoevaak een bewoner voor een gaste aantal moet koken dat buiten het minimun of maximum valt van gasten waarvoor ze kunnen koken."""
     
@@ -276,46 +278,88 @@ for j in gangen:
     for i in range(len(df)):
         ts[(df.iloc[i, 1], j)] = df.loc[i, j]
 
-#Gebruik functies
-logger.debug(msg=f'Start:{wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021)}')
+#2 opt toegepast bij running dinner
+moment0 = wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021)
+logger.debug(msg=f'Start:{moment0}')
+class itteratiepergang(Exception): pass
+class maxitteratie(Exception):pass
+
+def plot(X, Y):
+    plt.plot(X,Y)
+    plt.title('Uitkomsten Toegestanen Oplossingen per Itteratie')
+    plt.xlabel('Itteratie')
+    plt.ylabel('Oplossing')
+    plt.show()
+
 verwisselde_personen = []
 itteratie = 0  
 improved = True
 gangen = ['','','Voor','Hoofd','Na']
-
+X = []
+Y = []
+X.append(0)
+Y.append(moment0)
 while improved:
-    impoved = False
-    for k in range(2,5):
-        for i in range(3):
-            for j in range(3):
-               if i == j:
-                    continue
-               else:
-                    df_new = df.copy()
-                    changes = []
-                    change1 = df.iloc[i,k]
-                    change2 = df.iloc[j,k]      #De verwisseling van de twee cellen
-                    df_new.iloc[j,k] = change1
-                    df_new.iloc[i,k] = change2
-
-                    koppel = []
-                    persoon1 = df.iloc[i,1]
-                    persoon2 = df.iloc[j,1]   #Het maken van een tuple met het verwisselde koppel en de gang.
-                    koppel.append(persoon1)
-                    koppel.append(persoon2)
-                    koppel.append(gangen[k])
-                    
-                    tup = tuple(sorted(koppel))
-                    if tup not in verwisselde_personen:  #Het zorgen dat er alleen gekeken wordt naar unique oplossing door de verwisselde bewoners en de gang in een lijste te stoppen.
-                        verwisselde_personen.append(tup)
-                        if eisen(ts, df_new, df_bewoners, df_adressen, df_paar_blijft_bij_elkaar) > 0: #De controlle dat er geen eisen overschreden worden
-                           continue
+    try:
+        impoved = False
+        for k in range(2,5):
+            loc_itteratie = 0
+            try:   
+                for i in range(len(df)):
+                    for j in range(len(df)):
+                        if i == j:
+                            continue
                         else:
-                            sol = wensen(df_new, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021) 
-                            start = wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021)
-                            itteratie += 1
-                            logger.debug(msg=f'Itteratie:{itteratie}')                   
-                            if sol < start: #Wanneer de oplossing kleiner is dan de start wordt de oplossing de nieuwe start.
-                                df = df_new
-                                improved = True
-                                logger.debug(msg=f'Oplossing:{sol}')
+                            df_new = df.copy()
+                            changes = []
+                            change1 = df.iloc[i,k]
+                            change2 = df.iloc[j,k]      #De verwisseling van de twee cellen
+                            df_new.iloc[j,k] = change1
+                            df_new.iloc[i,k] = change2
+
+                            koppel = []
+                            persoon1 = df.iloc[i,1]
+                            persoon2 = df.iloc[j,1]   #Het maken van een tuple met het verwisselde koppel en de gang.
+                            koppel.append(persoon1)
+                            koppel.append(persoon2)
+                            koppel.append(gangen[k])
+                    
+                            tup = tuple(sorted(koppel))
+                            if tup not in verwisselde_personen:  #Het zorgen dat er alleen gekeken wordt naar unique oplossing door de verwisselde bewoners en de gang in een lijste te stoppen.
+                                verwisselde_personen.append(tup)
+
+                                if eisen(ts, df_new, df_bewoners, df_adressen, df_paar_blijft_bij_elkaar) > 0: #De controlle dat er geen eisen overschreden worden
+                                    continue
+
+                                else:
+                                    sol = wensen(df_new, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021) 
+                                    start = wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021)
+                                    itteratie += 1
+                                    loc_itteratie += 1
+                                    logger.debug(msg=f'Itteratie:{itteratie}, local:{loc_itteratie}')
+
+                                    X.append(itteratie)
+                                    Y.append(sol)
+
+                                    if itteratie == 1500:
+                                        df.to_excel('Oplossing 1 Running dinner 2023.xlsx', index = False)
+                                        plot(X,Y)
+
+
+                                    if sol < start: #Wanneer de oplossing kleiner is dan de start wordt de oplossing de nieuwe start.
+                                        df = df_new
+                                        improved = True
+                                        logger.debug(msg=f'Oplossing:{sol}')
+                                
+                                    if loc_itteratie == 3:
+                                        raise itteratiepergang()
+                                
+                                    
+                
+            except itteratiepergang:
+                pass
+    except maxitteratie:
+        improved = True
+        break
+        
+plt.plot
