@@ -258,7 +258,7 @@ def wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, d
     return  count_meer_dan_twee_keer_zelfde_persoon * 0.3 + count_hoofdgerecht2022 * 0.2 + count_voorkeur * 0.175 + count_zelfde_tafelpartner_2022 * 0.15 + count_met_buren_aan_tafel * 0.125 + count_zelfde_tafelpartner_2021 * 0.05
 
 #Data inladen 
-df = pd.read_excel('Running Dinner eerste oplossing 2023 v2.xlsx')
+df = pd.read_excel('Running Dinner tweede oplossing 2023 v2.xlsx')
 df_bewoners = pd.read_excel("Running Dinner dataset 2023 v2.xlsx",sheet_name="Bewoners" )
 df_adressen = pd.read_excel("Running Dinner dataset 2023 v2.xlsx",sheet_name="Adressen" )
 df_kookte_2022 = pd.read_excel("Running Dinner dataset 2023 v2.xlsx",sheet_name="Kookte vorig jaar")
@@ -342,7 +342,7 @@ while improved:
                                     Y.append(sol)
 
                                     if itteratie == 1500:
-                                        df.to_excel('Oplossing 1 Running dinner 2023.xlsx', index = False)
+                                        df.to_excel('Oplossing 2 Running dinner 2023.xlsx', index = False)
                                         plot(X,Y)
 
 
