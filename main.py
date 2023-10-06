@@ -361,5 +361,3 @@ while improved:
     except maxitteratie:
         improved = True
         break
-        
-plt.plot
