@@ -340,18 +340,18 @@ while improved:
                                 X.append(itteratie)
                                 Y.append(sol)
 
-                                if itteratie % 1000 == 0:
-                                    df.to_excel('Oplossing 4 Running dinner 2023.xlsx', index = False)
-                                    plot(X,Y)
+                                    if itteratie == 1500:
+                                        df.to_excel('Oplossing 2 Running dinner 2023.xlsx', index = False)
+                                        plot(X,Y)
 
 
-                                if sol < start: #Wanneer de oplossing kleiner is dan de start wordt de oplossing de nieuwe start.
-                                    df = df_new
-                                    improved = True
-                                    logger.debug(msg=f'Oplossing:{sol}')
-                            
-                                if loc_itteratie == 3:
-                                    raise itteratiepergang()
+                                    if sol < start: #Wanneer de oplossing kleiner is dan de start wordt de oplossing de nieuwe start.
+                                        df = df_new
+                                        improved = True
+                                        logger.debug(msg=f'Oplossing:{sol}')
+                                
+                                    if loc_itteratie == 3:
+                                        raise itteratiepergang()
                                 
                                     
                 
