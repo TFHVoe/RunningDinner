@@ -216,7 +216,7 @@ def metdeburenaantafel(df, df_buren):#Functie die telt hoevaak er met de driecte
                 if i[0]+i[1] == j[0]+j[1] or i[1]+i[0] == j[0]+j[1] or i[0]+i[1] == j[1]+j[0] or i[1]+i[0] == j[1]+j[0]: #Telt 1 op wanneer er met de directe buren aan tafel gezeten wordt.
                     countzelfdeburen += 1
     return countzelfdeburen
-def zelfdetafelpartners2021(df, df_tafelgenoot_2021):#Functie die telt hoevaak twee tafelgenoten in 2021 ook de tafelgenoot van 2023 waren.
+def zelfdetafelpartners2021(df, df_tafelgenoot_2021):#Functie die telt hoevaak twee tafelgenoten in 2021 ook de tafelgenoot van 2023 waren. 
     """Functie die telt hoe vaak twee deelnemers die in 2022 bij elkaar aan tafel zaten, in 2023 weer elkaars tafelgenoot waren."""
     countzelfdetafelpartner2021 = 0
     lst = []
@@ -340,7 +340,7 @@ while improved:
                                 Y.append(sol)
 
                                 if itteratie % 1000 == 0:
-                                    df.to_excel('Oplossing 2 Running dinner 2023.xlsx', index = False)
+                                    df.to_excel('Oplossing 4 Running dinner 2023.xlsx', index = False)
                                     plot(X,Y)
 
 

@@ -4,7 +4,7 @@ import numpy as np
 
 
 
-df = pd.read_excel('Oplossing 4 Running Dinner 2023.xlsx')
+df = pd.read_excel('Running Dinner eerste oplossing 2023 v2.xlsx')
 df_bewoners = pd.read_excel("Running Dinner dataset 2023 v2.xlsx",sheet_name="Bewoners" )
 df_adressen = pd.read_excel("Running Dinner dataset 2023 v2.xlsx",sheet_name="Adressen" )
 df_kookte_2022 = pd.read_excel("Running Dinner dataset 2023 v2.xlsx",sheet_name="Kookte vorig jaar")
