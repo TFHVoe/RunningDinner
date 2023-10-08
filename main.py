@@ -37,7 +37,7 @@ def elkeganganderadres(ts):#Functie die telt hoe vaak er niet door een persoon e
         if i != 3:      #Een for loop die telt hoe vaak er niet voldaan wordt aan de eisen dat er een voor, hoofd en nagerecht gegeten wordt en dat dit op een ander adres is.    
             fout_count += 1
     return fout_count
-def moetkoken(df, df_bewoners):#Functie die telt hoe vaak er een persoon niet kookt die wel moet koken.    """Functie die telt hoe vaak het kook adres niet gelijk is aan het huisadres."""
+def moetkoken(df):#Functie die telt hoe vaak er een persoon niet kookt die wel moet koken.    """Functie die telt hoe vaak het kook adres niet gelijk is aan het huisadres."""
     """Functie die telt hoeveel mensen die een van de gangen moet koken niet kookt."""
     count_kook_adres_is_niet_huisadres = 0
     gangen = ['Voor','Hoofd','Na']
@@ -83,9 +83,9 @@ def paarbijelkaar(df, df_paar_blijft_bij_elkaar):#Functie die telt hoe vaak een 
             count_paarnietbijelkaar += 1   
     return count_paarnietbijelkaar
 
-def eisen(ts, df, df_bewoners, df_adressen, df_paar_blijft_bij_elkaar):#Een Functie die alle eisen controleert.
+def eisen(ts, df, df_adressen, df_paar_blijft_bij_elkaar):#Een Functie die alle eisen controleert.
     count_elke_gang_anders = elkeganganderadres(ts)
-    moet_koken = moetkoken(df, df_bewoners)
+    moet_koken = moetkoken(df)
     kookadres_is_huisadres = kookadresishuisadres(df)
     count_aantal_eters_voldoed = countaantaletersvoldoed(df, df_adressen)
     paar_bij_elkaar = paarbijelkaar(df, df_paar_blijft_bij_elkaar)
@@ -282,7 +282,6 @@ for j in gangen:
 moment0 = wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021)
 logger.debug(msg=f'Start:{moment0}')
 class itteratiepergang(Exception): pass
-class maxitteratie(Exception):pass
 
 def plot(X, Y):
     plt.plot(X,Y)
@@ -327,7 +326,7 @@ while improved:
                         if tup not in verwisselde_personen:  #Het zorgen dat er alleen gekeken wordt naar unique oplossing door de verwisselde bewoners en de gang in een lijste te stoppen.
                             verwisselde_personen.append(tup)
 
-                            if eisen(ts, df_new, df_bewoners, df_adressen, df_paar_blijft_bij_elkaar) > 0: #De controlle dat er geen eisen overschreden worden
+                            if eisen(ts, df_new, df_adressen, df_paar_blijft_bij_elkaar) > 0: #De controlle dat er geen eisen overschreden worden
                                 continue
 
                             else:
@@ -340,7 +339,7 @@ while improved:
                                 X.append(itteratie)
                                 Y.append(sol)
 
-                                if itteratie  == 1500:
+                                if itteratie % 1000 == 0:
                                     df.to_excel('Oplossing 2 Running dinner 2023.xlsx', index = False)
                                     plot(X,Y)
 
