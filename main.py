@@ -283,7 +283,8 @@ moment0 = wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_bu
 logger.debug(msg=f'Start:{moment0}')
 class itteratiepergang(Exception): pass
 
-def plot(X, Y):
+def plot(X, Y):#De plot van de iteraties tegen de oplossing voor deze iteratie
+    """Functie voor het plotten van de grafiek: iteraties tegen de oplossing voor deze iteratie """
     plt.plot(X,Y)
     plt.title('Uitkomsten Toegestanen Oplossingen per Itteratie')
     plt.xlabel('Itteratie')
@@ -340,7 +341,7 @@ while improved:
                                 Y.append(sol)
 
                                 if itteratie % 1000 == 0:
-                                    df.to_excel('Oplossing 4 Running dinner 2023.xlsx', index = False)
+                                    df.to_excel('Verbeterde planning Running dinner 2023.xlsx', index = False) #Als er 1000 itearteis zijn geweest wordt er een grafiek gemaakt en een oplossing in een excel bestand gegenereerd.
                                     plot(X,Y)
 
 
