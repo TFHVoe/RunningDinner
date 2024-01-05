@@ -57,7 +57,7 @@ def KookadresIsHuisadres(df):#Functie die telt hoe vaak het kook adres niet geli
             if df.iloc[i,2] != df.loc[i,df.iloc[i,6]]: #Controleert of het huisadres gelijk is aan het kookaders.
                 count_kook_adres_is_niet_huisadres +=1 
     return count_kook_adres_is_niet_huisadres 
-def CountAantalEtersVoldoed(df, df_adressens):#Functie die telt hoe vaak het gasten aantal waarvoor ze moeten koken buit het gasten aantal waarvoor ze kunnen koken ligt.
+def CountAantalEtersVoldoed(df, df_adressen):#Functie die telt hoe vaak het gasten aantal waarvoor ze moeten koken buit het gasten aantal waarvoor ze kunnen koken ligt.
     """Functie die telt hoevaak een bewoner voor een gaste aantal moet koken dat buiten het minimun of maximum valt van gasten waarvoor ze kunnen koken."""
     
     count_aantal_eters_voldoed = 0
@@ -290,17 +290,103 @@ def plot(X, Y, Y1):#De plot van de iteraties tegen de oplossing voor deze iterat
 
 
 #2 opt toegepast bij running dinner
-def TwoOpt(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021, ts, df_paar_blijft_bij_elkaar):
+def TwoOpt(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021, ts, df_paar_blijft_bij_elkaar, verwisselingen, gang_wissel):
     """
     Returns een verbeterde tafel planning na een meegegeven aantal twee-opt verwisselingen.
     
     Args:
-        df (dataframe):     Start oplossing
-        gt (dictionary):    
-
+        df (dataframe):                         Start oplossing
+        gt (dictionary):                        Gerecht per adres
+        ts (dictionary):                        Bewoner voor gerecht per adres
+        df_kookte_2022 (dataframe):             Wie wat kookte in 2022
+        df_adressen (dataframe):                Bewoner per adres
+        df_tafelgenoot_2022 (dataframe):        Tafelgenoten 2022
+        df_buren (dataframe):                   Directe buren per adres
+        df_tafelgenoot_2022 (dataframe):        Tafelgenoten 2021
+        df_paar_blijft_bij_elkaar (dataframe):  Bewoners die ieder gerecht bij elkaar blijven
+        verwisselingen (int):                   Hoeveel verwisselingen tot het uitschrijven van een verbeterde oplossing en visualisatie
+        gang_wissel (int):                      Na hoeveel verwisselingen er in de gangen gewisselt wordt
+    
+    Return:
+        'Verbeterde planning Running dinner 2023.xlsx': een excel bestand met een verbeterde planning.
     """
 
+    moment0 = wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021)
+    logger.debug(msg=f'Start:{moment0}')
+    class IteratiePerGang(Exception): pass
+    
+    verwisselde_personen = []
+    iteratie = 0  
+    improved = True
+    gangen = ['','','Voor','Hoofd','Na']
+    X = []
+    Y = []
+    Y1 = []
+    X.append(0)
+    Y.append(moment0)
+    Y1.append(moment0)
+    while improved:
+        for k in range(2,5):
+            loc_iteratie = 0
+            try:   
+                for i in range(len(df)):
+                    for j in range(len(df)):
+                        if i == j:
+                            continue
+                        else:
+                            df_new = df.copy()
+                            change1 = df.iloc[i,k]
+                            change2 = df.iloc[j,k]      #De verwisseling van de twee cellen
+                            df_new.iloc[j,k] = change1
+                            df_new.iloc[i,k] = change2
+
+                            koppel = []
+                            persoon1 = df.iloc[i,1]
+                            persoon2 = df.iloc[j,1]   #Het maken van een tuple met het verwisselde koppel en de gang.
+                            koppel.append(persoon1)
+                            koppel.append(persoon2)
+                            koppel.append(gangen[k])
+                    
+                            tup = tuple(sorted(koppel))
+                            if tup not in verwisselde_personen:  #Het zorgen dat er alleen gekeken wordt naar unique oplossing door de verwisselde bewoners en de gang in een lijste te stoppen.
+                                verwisselde_personen.append(tup)
+
+                                if eisen(ts, df_new, df_adressen, df_paar_blijft_bij_elkaar) > 0: #De controlle dat er geen eisen overschreden worden
+                                    continue
+
+                                else:
+                                    sol = wensen(df_new, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021) 
+                                    start = wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021)
+                                    iteratie += 1
+                                    loc_iteratie += 1
+                                    logger.debug(msg=f'Iteratie:{iteratie}, local:{loc_iteratie}')
+
+                                    X.append(iteratie)
+                                    Y.append(sol)
+                                
+
+                                    if sol < start: #Wanneer de oplossing kleiner is dan de start wordt de oplossing de nieuwe start.
+                                        df = df_new
+                                        improved = True
+                                        logger.debug(msg=f'Oplossing:{sol}')
+                                        Y1.append(sol)
+                                    else:
+                                        Y1.append(start)
+
+                                    if iteratie % verwisselingen == 0:
+                                        df.to_excel('Verbeterde planning Running dinner 2023.xlsx', index = False) #Als er 1000 itearteis zijn geweest wordt er een grafiek gemaakt en een oplossing in een excel bestand gegenereerd.
+                                        plot(X,Y,Y1)
+
+                                    
+                                    if loc_iteratie == gang_wissel:
+                                        raise IteratiePerGang()
+                                
+                                    
+                
+            except IteratiePerGang:
+                pass
 
 
-
-print(ts)
+verwisselingen = 1000
+gang_wissel = 3
+TwoOpt(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021, ts, df_paar_blijft_bij_elkaar, verwisselingen, gang_wissel)
