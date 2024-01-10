@@ -258,7 +258,7 @@ def wensen(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, d
     return  count_meer_dan_twee_keer_zelfde_persoon * 0.3 + count_hoofdgerecht2022 * 0.2 + count_voorkeur * 0.175 + count_zelfde_tafelpartner_2022 * 0.15 + count_met_buren_aan_tafel * 0.125 + count_zelfde_tafelpartner_2021 * 0.05
 
 #Data inladen 
-df = pd.read_excel('Running Dinner eerste oplossing 2023 v2.xlsx')
+df = pd.read_excel('Running Dinner tweede oplossing 2023 v2.xlsx')
 df_bewoners = pd.read_excel("Running Dinner dataset 2023 v2.xlsx",sheet_name="Bewoners" )
 df_adressen = pd.read_excel("Running Dinner dataset 2023 v2.xlsx",sheet_name="Adressen" )
 df_kookte_2022 = pd.read_excel("Running Dinner dataset 2023 v2.xlsx",sheet_name="Kookte vorig jaar")
@@ -284,7 +284,7 @@ def plot(X, Y, Y1):#De plot van de iteraties tegen de oplossing voor deze iterat
     plt.plot(X,Y)
     plt.plot(X,Y1, 'r')
     plt.title('Uitkomsten Toegestanen Oplossingen per Iteratie')
-    plt.xlabel('Itteratie')
+    plt.xlabel('Iteratie')
     plt.ylabel('Oplossing')
     plt.show()
 
@@ -387,6 +387,6 @@ def TwoOpt(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, d
                 pass
 
 
-verwisselingen = 1000
+verwisselingen = 1500
 gang_wissel = 3
 TwoOpt(df, gt, df_kookte_2022, df_adressen, df_tafelgenoot_2022, df_buren, df_tafelgenoot_2021, ts, df_paar_blijft_bij_elkaar, verwisselingen, gang_wissel)
